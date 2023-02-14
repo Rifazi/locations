@@ -1,40 +1,36 @@
 import { DynamoDB, GetItemInput, ScanInput } from '@aws-sdk/client-dynamodb'
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 
-interface UserInput {
-    id: string
-}
-
 exports.handler = async (event: any) => {
-
-    const { body } = event
-
     const dynamoClient = new DynamoDB({ 
         region: 'us-east-1' 
     })
 
-    const data = JSON.parse(body) as UserInput
-    console.log("Data: " + data)
+    const querystring = event.queryStringParameters
+    const id = querystring?.id
+
+    console.log("query: " + querystring)
+    console.log("ID: " + id)
 
     const scanLocation: ScanInput = {
         TableName: process.env.LOCATION_TABLE_NAME
     }
 
     try {
-        if (data?.id) {
-            const getTLocation: GetItemInput = {
+        if (id) {
+            const getLocation: GetItemInput = {
                 Key: marshall({
-                    id: data.id
+                    id
                 }),
                 TableName: process.env.LOCATION_TABLE_NAME
             }
 
-            const { Item } = await dynamoClient.getItem(getTLocation)
-            const todo = Item ? unmarshall(Item) : null
+            const { Item } = await dynamoClient.getItem(getLocation)
+            const location = Item ? unmarshall(Item) : null
     
             return {
                 statusCode: 200,
-                body: JSON.stringify({ todo })
+                body: JSON.stringify({ location })
             }
         }
 

@@ -34,8 +34,12 @@ exports.handler = async (event: any) => {
 
     try {
         const latLong = await latLongFetch(location)
-        location.latitude = latLong.data.lat
-        location.longitude = latLong.data.lon
+        const latLongData = latLong.data[0]
+        location.latitude = latLongData.lat
+        location.longitude = latLongData.lon
+
+        console.log("lat/long: " + JSON.stringify(latLongData))
+        console.log("Location to insert: " + JSON.stringify(location))
 
         const locationParams: PutItemInput = {
             Item: marshall(location),
