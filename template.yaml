@@ -1,0 +1,580 @@
+Resources:
+  locationsapiC2A1CA2E:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Description: This services the Locations API
+      Name: Locations API
+    Metadata:
+      aws:cdk:path: LocationsStack/locations-api/Resource
+  locationsapiDeployment98E2A77E370720ad473fea0b2af610a9965c0c29:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId:
+        Ref: locationsapiC2A1CA2E
+      Description: This services the Locations API
+    DependsOn:
+      - locationGETValidator83C25DAE
+      - locationsapilocationGET3F2F8FDF
+      - locationsapilocationOPTIONS715DC836
+      - locationsapilocationPOST45D06665
+      - locationsapilocation484B6C5D
+      - locationsapiOPTIONS14483C6F
+      - locationsapilocationPOSTModelC5ADFC77
+      - locationsapilocationPOSTValidator4DAC51F9
+    Metadata:
+      aws:cdk:path: LocationsStack/locations-api/Deployment/Resource
+  locationsapiDeploymentStageprod5D16E595:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId:
+        Ref: locationsapiC2A1CA2E
+      DeploymentId:
+        Ref: locationsapiDeployment98E2A77E370720ad473fea0b2af610a9965c0c29
+      StageName: prod
+    Metadata:
+      aws:cdk:path: LocationsStack/locations-api/DeploymentStage.prod/Resource
+  locationsapiOPTIONS14483C6F:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: OPTIONS
+      ResourceId:
+        Fn::GetAtt:
+          - locationsapiC2A1CA2E
+          - RootResourceId
+      RestApiId:
+        Ref: locationsapiC2A1CA2E
+      AuthorizationType: NONE
+      Integration:
+        IntegrationResponses:
+          - ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'*'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+            StatusCode: "204"
+        RequestTemplates:
+          application/json: "{ statusCode: 200 }"
+        Type: MOCK
+      MethodResponses:
+        - ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Methods: true
+          StatusCode: "204"
+    Metadata:
+      aws:cdk:path: LocationsStack/locations-api/Default/OPTIONS/Resource
+  locationsapilocation484B6C5D:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Fn::GetAtt:
+          - locationsapiC2A1CA2E
+          - RootResourceId
+      PathPart: location
+      RestApiId:
+        Ref: locationsapiC2A1CA2E
+    Metadata:
+      aws:cdk:path: LocationsStack/locations-api/Default/location/Resource
+  locationsapilocationOPTIONS715DC836:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: OPTIONS
+      ResourceId:
+        Ref: locationsapilocation484B6C5D
+      RestApiId:
+        Ref: locationsapiC2A1CA2E
+      AuthorizationType: NONE
+      Integration:
+        IntegrationResponses:
+          - ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'*'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+            StatusCode: "204"
+        RequestTemplates:
+          application/json: "{ statusCode: 200 }"
+        Type: MOCK
+      MethodResponses:
+        - ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Methods: true
+          StatusCode: "204"
+    Metadata:
+      aws:cdk:path: LocationsStack/locations-api/Default/location/OPTIONS/Resource
+  locationsapilocationPOSTApiPermissionLocationsStacklocationsapiCEA09DEEPOSTlocationD5AA3745:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - locationPOSTlocation68A353FA
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: locationsapiC2A1CA2E
+            - /
+            - Ref: locationsapiDeploymentStageprod5D16E595
+            - /POST/location
+    Metadata:
+      aws:cdk:path: LocationsStack/locations-api/Default/location/POST/ApiPermission.LocationsStacklocationsapiCEA09DEE.POST..location
+  locationsapilocationPOSTApiPermissionTestLocationsStacklocationsapiCEA09DEEPOSTlocation0E299404:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - locationPOSTlocation68A353FA
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: locationsapiC2A1CA2E
+            - /test-invoke-stage/POST/location
+    Metadata:
+      aws:cdk:path: LocationsStack/locations-api/Default/location/POST/ApiPermission.Test.LocationsStacklocationsapiCEA09DEE.POST..location
+  locationsapilocationPOST45D06665:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: POST
+      ResourceId:
+        Ref: locationsapilocation484B6C5D
+      RestApiId:
+        Ref: locationsapiC2A1CA2E
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - :lambda:path/2015-03-31/functions/
+              - Fn::GetAtt:
+                  - locationPOSTlocation68A353FA
+                  - Arn
+              - /invocations
+      RequestModels:
+        application/json:
+          Ref: locationsapilocationPOSTModelC5ADFC77
+      RequestParameters: {}
+      RequestValidatorId:
+        Ref: locationsapilocationPOSTValidator4DAC51F9
+    Metadata:
+      aws:cdk:path: LocationsStack/locations-api/Default/location/POST/Resource
+  locationsapilocationGETApiPermissionLocationsStacklocationsapiCEA09DEEGETlocationF32F8C25:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - locationGETlocation517136E7
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: locationsapiC2A1CA2E
+            - /
+            - Ref: locationsapiDeploymentStageprod5D16E595
+            - /GET/location
+    Metadata:
+      aws:cdk:path: LocationsStack/locations-api/Default/location/GET/ApiPermission.LocationsStacklocationsapiCEA09DEE.GET..location
+  locationsapilocationGETApiPermissionTestLocationsStacklocationsapiCEA09DEEGETlocation69E55360:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - locationGETlocation517136E7
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: locationsapiC2A1CA2E
+            - /test-invoke-stage/GET/location
+    Metadata:
+      aws:cdk:path: LocationsStack/locations-api/Default/location/GET/ApiPermission.Test.LocationsStacklocationsapiCEA09DEE.GET..location
+  locationsapilocationGET3F2F8FDF:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: GET
+      ResourceId:
+        Ref: locationsapilocation484B6C5D
+      RestApiId:
+        Ref: locationsapiC2A1CA2E
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - :lambda:path/2015-03-31/functions/
+              - Fn::GetAtt:
+                  - locationGETlocation517136E7
+                  - Arn
+              - /invocations
+      RequestParameters: {}
+      RequestValidatorId:
+        Ref: locationGETValidator83C25DAE
+    Metadata:
+      aws:cdk:path: LocationsStack/locations-api/Default/location/GET/Resource
+  locationsapilocationPOSTModelC5ADFC77:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      RestApiId:
+        Ref: locationsapiC2A1CA2E
+      ContentType: application/json
+      Name: locationPOSTModel
+      Schema:
+        $schema: http://json-schema.org/draft-04/schema#
+        title: locationPOSTModel
+        type: object
+        properties:
+          name:
+            type: string
+          city:
+            type: string
+          state:
+            type: string
+          country:
+            type: string
+        required:
+          - name
+          - city
+          - state
+          - country
+    Metadata:
+      aws:cdk:path: LocationsStack/locations-api/locationPOSTModel/Resource
+  locationsapilocationPOSTValidator4DAC51F9:
+    Type: AWS::ApiGateway::RequestValidator
+    Properties:
+      RestApiId:
+        Ref: locationsapiC2A1CA2E
+      ValidateRequestBody: true
+      ValidateRequestParameters: true
+    Metadata:
+      aws:cdk:path: LocationsStack/locations-api/locationPOSTValidator/Resource
+  locationsTableE9413864:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: LocationsStack/locationsTable/Resource
+  locationPOSTlocationServiceRoleBD6B9EF5:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: LocationsStack/locationPOST/location/ServiceRole/Resource
+  locationPOSTlocationServiceRoleDefaultPolicy0E15E7FC:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:BatchWriteItem
+              - dynamodb:ConditionCheckItem
+              - dynamodb:DeleteItem
+              - dynamodb:DescribeTable
+              - dynamodb:GetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:PutItem
+              - dynamodb:Query
+              - dynamodb:Scan
+              - dynamodb:UpdateItem
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - locationsTableE9413864
+                  - Arn
+              - Ref: AWS::NoValue
+        Version: "2012-10-17"
+      PolicyName: locationPOSTlocationServiceRoleDefaultPolicy0E15E7FC
+      Roles:
+        - Ref: locationPOSTlocationServiceRoleBD6B9EF5
+    Metadata:
+      aws:cdk:path: LocationsStack/locationPOST/location/ServiceRole/DefaultPolicy/Resource
+  locationPOSTlocation68A353FA:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 92735b8fe7322704073d65ea39b97c0d6c0f403f4d86eb016646bcb6c58ee872.zip
+      Role:
+        Fn::GetAtt:
+          - locationPOSTlocationServiceRoleBD6B9EF5
+          - Arn
+      Environment:
+        Variables:
+          LOCATION_TABLE_NAME:
+            Ref: locationsTableE9413864
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Runtime: nodejs14.x
+    DependsOn:
+      - locationPOSTlocationServiceRoleDefaultPolicy0E15E7FC
+      - locationPOSTlocationServiceRoleBD6B9EF5
+    Metadata:
+      aws:cdk:path: LocationsStack/locationPOST/location/Resource
+      aws:asset:path: /Users/rifaz/Locations/cdk.out/asset.92735b8fe7322704073d65ea39b97c0d6c0f403f4d86eb016646bcb6c58ee872
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  locationGETlocationServiceRole816E3CA3:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: LocationsStack/locationGET/location/ServiceRole/Resource
+  locationGETlocationServiceRoleDefaultPolicy440C9AAE:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:BatchWriteItem
+              - dynamodb:ConditionCheckItem
+              - dynamodb:DeleteItem
+              - dynamodb:DescribeTable
+              - dynamodb:GetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:PutItem
+              - dynamodb:Query
+              - dynamodb:Scan
+              - dynamodb:UpdateItem
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - locationsTableE9413864
+                  - Arn
+              - Ref: AWS::NoValue
+        Version: "2012-10-17"
+      PolicyName: locationGETlocationServiceRoleDefaultPolicy440C9AAE
+      Roles:
+        - Ref: locationGETlocationServiceRole816E3CA3
+    Metadata:
+      aws:cdk:path: LocationsStack/locationGET/location/ServiceRole/DefaultPolicy/Resource
+  locationGETlocation517136E7:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: f30c8b7c34970c0af0bdaeafe5c875fdd288d4ddd38c03bcdf163c42cdb3b041.zip
+      Role:
+        Fn::GetAtt:
+          - locationGETlocationServiceRole816E3CA3
+          - Arn
+      Environment:
+        Variables:
+          LOCATION_TABLE_NAME:
+            Ref: locationsTableE9413864
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      Handler: index.handler
+      Runtime: nodejs14.x
+    DependsOn:
+      - locationGETlocationServiceRoleDefaultPolicy440C9AAE
+      - locationGETlocationServiceRole816E3CA3
+    Metadata:
+      aws:cdk:path: LocationsStack/locationGET/location/Resource
+      aws:asset:path: /Users/rifaz/Locations/cdk.out/asset.f30c8b7c34970c0af0bdaeafe5c875fdd288d4ddd38c03bcdf163c42cdb3b041
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  locationGETValidator83C25DAE:
+    Type: AWS::ApiGateway::RequestValidator
+    Properties:
+      RestApiId:
+        Ref: locationsapiC2A1CA2E
+      Name: locationGETValidator
+      ValidateRequestBody: false
+      ValidateRequestParameters: true
+    Metadata:
+      aws:cdk:path: LocationsStack/locationGETValidator/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Analytics: v2:deflate64:H4sIAAAAAAAA/1WRyU7DMBCGn4W7Y1ZV4tgWcStUAXGNJvEQJvESYpsqivLueGkEPc03M/9s9h3fPPCbKzjZohF9Ianm85uDpmchVM0wUAsOTzDxuUTrtgOx/ade8QkHaSaF2sXoPy+0aDHGMgS98WODO7DIDui+jIjJM63Zc+fMByNQJlGCEr99GPoBkgQ4M2btZWxhElQtgM8hecRRkbVkdJQ+e924wAsTkwZlRDjzHWqZZiZYiysd5nWWvySz1jECFV7A5IJkj0ZSM0U308LsfQXWorN8G03w+c43Pbp49hKVr94N3v0dnHTxiUi3F9cH3hstKO8cV+Kdvf65feSb8FudJSpGrx0p5GW2v1Ix6XPJAQAA
+    Metadata:
+      aws:cdk:path: LocationsStack/CDKMetadata/Default
+    Condition: CDKMetadataAvailable
+Outputs:
+  locationsapiEndpointA24FA575:
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Ref: locationsapiC2A1CA2E
+          - .execute-api.
+          - Ref: AWS::Region
+          - "."
+          - Ref: AWS::URLSuffix
+          - /
+          - Ref: locationsapiDeploymentStageprod5D16E595
+          - /
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - af-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+Parameters:
+  BootstrapVersion:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cdk-bootstrap/hnb659fds/version
+    Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
+Rules:
+  CheckBootstrapVersion:
+    Assertions:
+      - Assert:
+          Fn::Not:
+            - Fn::Contains:
+                - - "1"
+                  - "2"
+                  - "3"
+                  - "4"
+                  - "5"
+                - Ref: BootstrapVersion
+        AssertDescription: CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.
+
